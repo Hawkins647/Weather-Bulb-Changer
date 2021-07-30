@@ -1,0 +1,40 @@
+import requests
+from yeelight import Bulb
+
+bulb = Bulb("your bulb ip here (should be a string)")
+
+
+def get_weather(city_name):
+    """Use open weather api to search up a zip code and return the temperature"""
+    api_key = "your openweather api key"
+
+    root_url = "http://api.openweathermap.org/data/2.5/weather?"
+    url = f"{root_url}appid={api_key}&q={city_name}"
+    response = requests.get(url)
+
+    temp_celsius = response.json()["main"]["temp"] - 273.15
+    return temp_celsius
+
+
+def bulb_colour(temp):
+    """Change the bulb's colour with the temperature"""
+    if temp <= 0:
+        bulb.set_rgb(51, 51, 255)
+    if 10 < temp < 15:
+        bulb.set_rgb(51, 153, 255)
+    if 15 < temp < 20:
+        bulb.set_rgb(0, 255, 255)
+    if 20 < temp < 25:
+        bulb.set_rgb(0, 102, 0)
+    if 25 < temp < 30:
+        bulb.set_rgb(255, 255, 0)
+    if 30 < temp < 35:
+        bulb.set_rgb(255, 128, 0)
+    if 35 < temp < 40:
+        bulb.set_rgb(255, 0, 0)
+
+
+temperature = get_weather("city name here")
+bulb_colour(temperature)
+
+
